@@ -140,12 +140,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Helpers.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="Keyboard.h" />
   </ItemGroup>

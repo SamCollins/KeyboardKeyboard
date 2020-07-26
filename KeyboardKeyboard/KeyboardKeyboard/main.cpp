@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "Key.h"
+#include "Helpers.h"
 
 #include <Windows.h>
 #include <mmsystem.h>
@@ -9,7 +10,7 @@
 
 //void PlayWavFile(const char* filename, bool complete);
 
-const int LINE_NUM = 10;
+const int LINE_NUM = 40;
 bool escapeFlag = false;
 
 std::wstring StringToWString(std::wstring& ws, const std::string& s)
@@ -77,7 +78,9 @@ std::wstring GetRandomNote()
 
 int main()
 {
-	std::cout << "Playing Sound\n" << std::endl;
+	//std::cout << "Playing Sound\n" << std::endl;
+
+	Helpers::PrintTitle();
 
 	while (true)
 	{
@@ -111,7 +114,7 @@ int main()
 
 	//PlaySound(wide.c_str(), NULL, SND_SYNC);
 
-	std::cout << "\n\nFinished Playing" << std::endl;
+	std::cout << "\n\nThanks for Playing!" << std::endl;
 
 	std::cin.get();
 }
