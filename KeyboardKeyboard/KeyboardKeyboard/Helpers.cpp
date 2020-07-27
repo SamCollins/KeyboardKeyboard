@@ -22,3 +22,10 @@ void Helpers::DisplayInstructions()
 	std::cout << "\nExit - Exit the program (Code: exit)\n" << std::endl;
 	//std::cout << "\nPress ESC to exit\n" << std::endl;
 }
+
+std::wstring Helpers::StringToWString(std::wstring& ws, const std::string& s)
+{
+	std::wstring wsTmp(s.begin(), s.end());
+	ws = wsTmp;
+	return ws;
+}

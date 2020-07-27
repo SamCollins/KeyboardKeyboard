@@ -18,13 +18,6 @@ enum class input_code
 	exit
 };
 
-std::wstring StringToWString(std::wstring& ws, const std::string& s)
-{
-	std::wstring wsTmp(s.begin(), s.end());
-	ws = wsTmp;
-	return ws;
-}
-
 input_code TranslateInput(std::string input)
 {
 	//Maybe also trim whitespace here for extra input validation
@@ -77,7 +70,7 @@ std::wstring GetRandomNote()
 
 	std::wstring wFilename;
 
-	StringToWString(wFilename, path + filename);
+	Helpers::StringToWString(wFilename, path + filename);
 
 	return wFilename;
 }
