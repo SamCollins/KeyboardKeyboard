@@ -7,6 +7,7 @@
 #include <conio.h>
 
 const int LINE_NUM = 40;
+int CURRENT_LINE_COUNT = 0;
 bool escapeFlag = false;
 
 enum class input_code
@@ -47,17 +48,17 @@ bool ListenForKeypress(int keyCode)
 
 char EchoKey()
 {
-	static int count = 0;
+	//static int count = 0;
 
 	char key = _getch();
 
-	if (count == LINE_NUM)
+	if (CURRENT_LINE_COUNT == LINE_NUM)
 	{
 		std::cout << "\n\t";
-		count = 0;
+		CURRENT_LINE_COUNT = 0;
 	}
 
-	count++;
+	CURRENT_LINE_COUNT++;
 	return key;
 }
 
@@ -67,6 +68,22 @@ std::wstring GetRandomNote()
 	std::string path = "Notes/";
 
 	filename = "note" + std::to_string((std::rand() % 64 + 1)) + ".wav";
+
+	std::wstring wFilename;
+
+	Helpers::StringToWString(wFilename, path + filename);
+
+	return wFilename;
+}
+
+std::wstring GetMappedNote(std::map<char, int> mappedKeys, char keyCode)
+{
+	std::string filename = "";
+	std::string path = "Notes/";
+
+	int keyIndex = mappedKeys[keyCode];
+
+	filename = "note" + std::to_string(keyIndex) + ".wav";
 
 	std::wstring wFilename;
 
@@ -99,6 +116,76 @@ void GarboMode()
 	std::cout << "\n\nThank you for suffering! Please make another selection\n" << std::endl;
 }
 
+void RandoMode()
+{
+	//The fun mode
+	std::cout << "Rando Mode (Press ESC to stop playing)" << std::endl;
+	std::cout << "\n\t";
+
+	std::array<int, 64> keyIndexes;
+
+	for (int i = 0; i < 64; i++)
+	{
+		keyIndexes[i] = i + 1;
+	}
+
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::shuffle(keyIndexes.begin(), keyIndexes.end(), std::default_random_engine(seed));
+	//char* keysList = Helpers::GetKeyList();
+
+	//std::array<char, 50> keys = {
+	//	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, //0 - 9 keys
+	//	0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, //A - J keys
+	//	0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, //K - T keys
+	//	0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0xBA, 0xBC, 0xBE, 0xBF, //U - Z keys, also ; , . /
+	//	0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, //0 - 9 Numpad keys
+	//};
+
+	std::array<char, 64> keyLetters = {
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+		'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+		'u', 'v', 'w', 'x', 'y', 'z',
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+		'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+		'U', 'V', 'W', 'X', 'Y', 'Z',
+		'1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+		' ', '.'
+	};
+
+	std::map<char, int> mappedKeys;
+
+	for (int i = 0; i < 64; i++)
+	{
+		mappedKeys.insert(std::pair<char, int>(keyLetters[i], keyIndexes[i]));
+	}
+
+	while (true)
+	{
+		char key = EchoKey();
+
+		if (key == VK_ESCAPE)
+		{
+			break;
+		}
+		else
+		{
+			if (key == VK_RETURN)
+			{
+				std::cout << "\n\t";
+				CURRENT_LINE_COUNT = 0;
+			}
+			else
+			{
+				std::cout << key;
+				PlayNote(GetMappedNote(mappedKeys, key), false);
+			}
+			
+		}
+	}
+
+	std::cout << "\n\nThank you for playing! Please make another selection\n" << std::endl;
+}
+
 int main()
 {
 	Helpers::DisplayTitle();
@@ -111,6 +198,7 @@ int main()
 			break;
 		}
 
+		std::cout << "\t";
 		std::string inputSelection = "";
 		std::cin >> inputSelection;
 
@@ -122,7 +210,8 @@ int main()
 			std::cout << "This mode is not implemented yet (Sorry Im a shitter)" << std::endl;
 			break;
 		case input_code::random:
-			std::cout << "This mode is not implemented yet (Sorry Im a shitter)" << std::endl;
+			//std::cout << "This mode is not implemented yet (Sorry Im a shitter)" << std::endl;
+			RandoMode();
 			break;
 		case input_code::garbo:
 			GarboMode();
